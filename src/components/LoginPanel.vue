@@ -1,10 +1,15 @@
 <template>
   <section>
-    <h1>Login To Play!</h1>
-    <form action="javascript:void(0)">
+    <h1>Login!</h1>
+    <form id="loginForm" action="javascript:void(0)">
       <!-- <label class="floatingLabel" for="emailInput">Email Address</label> -->
       <div class="inputContainer">
-        <input type="text" placeholder="Email Address..." required />
+        <input
+          id="emailInput"
+          type="text"
+          placeholder="Email Address..."
+          required
+        />
         <fa-icon class="inputIcon emailIcon" :icon="['fas', 'at']" />
         <span class="focusBorder"></span>
       </div>
@@ -27,14 +32,54 @@
         <span class="focusBorder"></span>
       </div>
 
-      <input type="submit" value="Login" />
+      <input
+        @click="attemptLogIn"
+        id="loginButton"
+        type="submit"
+        value="Login"
+      />
     </form>
+    <p class="emailSpoiler">
+      Use Email: eve.holt@reqres.in and any username and password to login
+    </p>
   </section>
 </template>
 
 <script>
+import cookies from "vue-cookies";
+import axios from "axios";
 export default {
   name: "login-panel",
+
+  data() {
+    return {
+      loginToken: "",
+    };
+  },
+
+  methods: {
+    attemptLogIn() {
+      axios
+        .request({
+          url: "https://reqres.in/api/login",
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          data: {
+            email: document.getElementById("emailInput").value,
+            password: document.getElementById("passInput").value,
+          },
+        })
+        .then((res) => {
+          console.log(res);
+          this.loginToken = res.data.token;
+          cookies.set("loginToken", this.loginToken);
+          document.getElementById("loginForm").reset();
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    },
+  },
 };
 </script>
 
@@ -63,7 +108,7 @@ form {
     .inputIcon {
       position: absolute;
       top: 5px;
-      right: 364px;
+      right: 360px;
       font-size: 24px;
       color: #4b4b4b;
     }
@@ -86,11 +131,11 @@ form {
     font-weight: bold;
     background-position: left;
     background-size: 200%;
+    transition: background-position 0.2s ease-in-out;
 
     &:hover {
       cursor: pointer;
       background-position: right;
-      transition: background-position 0.2s ease-in-out;
       box-shadow: 0 1px 5px 1px #575757;
     }
   }
@@ -101,7 +146,7 @@ form {
     font-size: 24px;
     border: none;
     border-bottom: 3px solid #999999;
-    text-indent: 30px;
+    text-indent: 40px;
     width: 100%;
     place-self: center;
     padding: 3px 0;
@@ -135,5 +180,10 @@ form {
     justify-self: start;
     padding: 5px 0;
   }
+}
+
+.emailSpoiler {
+  color: #fff;
+  font-weight: bold;
 }
 </style>
