@@ -1,44 +1,39 @@
 <template>
   <section>
-    <transition mode="out-in">
+    <!-- Component/Element transition, transitions the first element out, the the other one in 1 frame later, pretty cool vue thing, I'm sure this is great on the router-view tag -->
+    <transition name="slide-fade" mode="out-in">
+      <!-- if errorTitle = false (default = undefined) this element will display, considered moving into own component, conflicted -->
       <div id="transitionContainer" v-if="!errorTitle">
-        <h1>Login!</h1>
+        <h1 class="loginTitle">Login!</h1>
         <form id="loginForm" action="javascript:void(0)">
-          <!-- <label class="floatingLabel" for="emailInput">Email Address</label> -->
+          <!-- had required on my input boxes, but removed since auth is handled by the API here -->
           <div class="inputContainer">
-            <input
-              id="emailInput"
-              type="text"
-              placeholder="Email Address..."
-              required
-            />
-            <fa-icon class="inputIcon emailIcon" :icon="['fas', 'at']" />
+            <!-- Input boxes, used text-indent to move the placeholder and user input text to the right a bit to make room for icons -->
+            <input id="emailInput" type="text" placeholder="Email Address..." />
+            <!-- FontAwesome icons from their library, positioned absolute and in the input boxes -->
+            <fa-icon class="inputIcon" :icon="['fas', 'at']" />
+            <!-- focus Border is styled with box-shadow in a wway that resembles a border-bottom, positioned absolute, left:0 and width: 0; with a transition on the width -->
             <span class="focusBorder"></span>
           </div>
-          <!-- <label class="floatingLabel" for="userInput">Username</label> -->
+
           <div class="inputContainer">
-            <input
-              type="text"
-              id="userInput"
-              placeholder="Username..."
-              required
-            />
+            <!-- Input boxes, used text-indent to move the placeholder and user input text to the right a bit to make room for icons -->
+            <input type="text" id="userInput" placeholder="Username..." />
+            <!-- FontAwesome icons from their library, positioned absolute and in the input boxes -->
             <fa-icon class="inputIcon" :icon="['fas', 'user']" />
+            <!-- focus Border is styled with box-shadow in a wway that resembles a border-bottom, positioned absolute, left:0 and width: 0; with a transition on the width -->
             <span class="focusBorder"></span>
           </div>
 
-          <!-- <label class="floatingLabel" for="passInput">Password</label> -->
           <div class="inputContainer">
-            <input
-              type="password"
-              id="passInput"
-              placeholder="Password..."
-              required
-            />
+            <!-- Input boxes, used text-indent to move the placeholder and user input text to the right a bit to make room for icons -->
+            <input type="password" id="passInput" placeholder="Password..." />
+            <!-- FontAwesome icons from their library, positioned absolute and in the input boxes -->
             <fa-icon class="inputIcon" :icon="['fas', 'key']" />
+            <!-- focus Border is styled with box-shadow in a wway that resembles a border-bottom, positioned absolute, left:0 and width: 0; with a transition on the width -->
             <span class="focusBorder"></span>
           </div>
-
+          <!-- Submit button for Axios POST on click -->
           <input
             @click="attemptLogIn"
             id="loginButton"
@@ -46,44 +41,51 @@
             value="Login"
           />
         </form>
+        <!-- Little section to make copy and pasting the API email a bit faster -->
         <p class="emailSpoiler">
           Use Email: eve.holt@reqres.in and any username and password to login
         </p>
       </div>
-    </transition>
-    <transition mode="in-out">
-      <modal-popup v-if="errorTitle" />
+
+      <!-- Component that transitions in when errorTitle is true, naming convention sucks a little because this was originally going to be a modal, but I changed it -->
+      <error-slide v-if="errorTitle" />
     </transition>
   </section>
 </template>
 
 <script>
+// imports
 import cookies from "vue-cookies";
 import axios from "axios";
-import ModalPopup from "./ModalPopup.vue";
+import ErrorSlide from "./ErrorSlide.vue";
 export default {
-  components: { ModalPopup },
+  // defining components
+  components: { ErrorSlide },
   name: "login-panel",
 
   data() {
     return {
-      loginToken: "",
+      //  Get Cookies
+      loginToken: cookies.get("loginToken"),
+      emailAddress: cookies.get("emailAddress"),
+      userName: cookies.get("userName"),
+
+      // variable for login message
+      logInResponse: "",
     };
   },
 
   computed: {
+    // Getter to change the data in the error state
     errorTitle() {
       return this.$store.getters.getModalError;
     },
   },
-  // computed: {
-  //   modalInfo() {
-  //     return this.$store.state.modalInfo;
-  //   },
-  // },
 
   methods: {
+    // Axios Post request used on click with login button
     attemptLogIn() {
+      this.logInResponse = "Logging You In...";
       axios
         .request({
           url: "https://reqres.in/api/login",
@@ -96,9 +98,20 @@ export default {
         })
         .then((res) => {
           console.log(res);
+          this.logInResponse = "Getting Login Token...";
           this.loginToken = res.data.token;
+          // Set Cookies, unsure if I'll use email address for anything, but I'll store it anyways, is this BAAAAD?
+          this.logInResponse = "Setting Cookies...";
           cookies.set("loginToken", this.loginToken);
+          cookies.set(
+            "emailAddress",
+            document.getElementById("emailInput").value
+          );
+          cookies.set("userName", document.getElementById("userInput").value);
+          // reset form on success, unsure if this is proper, but it seems to work.
+          // Dont think I'll need this much longer, might still run it prior to success just for funsies.
           document.getElementById("loginForm").reset();
+          this.logInResponse = "Redirecting To The Game...";
         })
         .catch((err) => {
           // console.log(err.response.data.error);
@@ -117,17 +130,40 @@ section {
   width: 400px;
   height: 400px;
   background: #cecece;
-  // padding-top: 15px;
   border-radius: 5px;
   box-shadow: 0px 0px 15px 3px rgba(0, 0, 0, 0.5);
   color: #210636;
+  display: grid;
+  grid-auto-flow: column;
+
+  .loginTitle {
+    place-self: center;
+  }
+}
+
+/* Enter and leave animations can use different */
+/* durations and timing functions.              */
+.slide-fade-enter-active {
+  transition: all 0.3s ease;
+}
+.slide-fade-leave-active {
+  transition: all 0.3s ease-in-out;
+}
+.slide-fade-enter
+/* .slide-fade-leave-active below version 2.1.8 */ {
+  transform: translateX(20px);
+  opacity: 0;
+}
+.slide-fade-leave-to {
+  transform: translateX(-20px);
+  opacity: 0;
 }
 
 #transitionContainer {
   display: grid;
   width: 100%;
   height: 100%;
-  gap: 20px;
+
   form {
     display: grid;
     margin: 5px;
@@ -148,10 +184,9 @@ section {
     }
 
     input[type="submit"] {
-      width: 120px;
-      height: 40px;
+      padding: 15px 50px;
       place-self: center;
-      border: none;
+      border: 1px solid #210636;
       background-image: linear-gradient(
         to left,
         #210636,
@@ -192,7 +227,7 @@ section {
         width: 0;
         height: 3px;
         background: #210636;
-        transition: 0.4s;
+        transition: width 0.38s ease-in-out;
       }
 
       &:focus {
@@ -219,5 +254,6 @@ section {
 .emailSpoiler {
   color: #210636;
   font-weight: bold;
+  place-self: center;
 }
 </style>
