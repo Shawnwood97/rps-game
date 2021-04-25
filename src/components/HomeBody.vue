@@ -6,6 +6,7 @@
 
 <script>
 import LoginPanel from "./LoginPanel.vue";
+
 export default {
   components: { LoginPanel },
   name: "home-body",
