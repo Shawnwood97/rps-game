@@ -3,13 +3,29 @@
     <h1>Login To Play!</h1>
     <form action="javascript:void(0)">
       <!-- <label class="floatingLabel" for="emailInput">Email Address</label> -->
-      <fa-icon :icon="['fas', 'user']" />
-      <input type="text" id="emailInput" placeholder="Email Address..." />
+      <div class="inputContainer">
+        <input type="text" placeholder="Email Address..." required />
+        <fa-icon class="inputIcon emailIcon" :icon="['fas', 'at']" />
+        <span class="focusBorder"></span>
+      </div>
       <!-- <label class="floatingLabel" for="userInput">Username</label> -->
-      <input type="text" id="userInput" placeholder="Username..." />
+      <div class="inputContainer">
+        <input type="text" id="userInput" placeholder="Username..." required />
+        <fa-icon class="inputIcon" :icon="['fas', 'user']" />
+        <span class="focusBorder"></span>
+      </div>
 
       <!-- <label class="floatingLabel" for="passInput">Password</label> -->
-      <input type="password" id="passInput" placeholder="Password..." />
+      <div class="inputContainer">
+        <input
+          type="password"
+          id="passInput"
+          placeholder="Password..."
+          required
+        />
+        <fa-icon class="inputIcon" :icon="['fas', 'key']" />
+        <span class="focusBorder"></span>
+      </div>
 
       <input type="submit" value="Login" />
     </form>
@@ -38,6 +54,20 @@ form {
   height: 100%;
   padding: 30px 0;
   margin: 5px;
+  place-items: center;
+
+  .inputContainer {
+    position: relative;
+    width: 100%;
+
+    .inputIcon {
+      position: absolute;
+      top: 5px;
+      right: 364px;
+      font-size: 24px;
+      color: #4b4b4b;
+    }
+  }
 
   input[type="submit"] {
     width: 120px;
@@ -54,7 +84,6 @@ form {
     border-radius: 5px;
     color: rgb(235, 235, 235);
     font-weight: bold;
-
     background-position: left;
     background-size: 200%;
 
@@ -72,16 +101,32 @@ form {
     font-size: 24px;
     border: none;
     border-bottom: 3px solid #999999;
-    text-indent: 5px;
+    text-indent: 30px;
     width: 100%;
-    text-shadow: 0px 0px 0px #000;
     place-self: center;
     padding: 3px 0;
+    font-weight: bold;
+
+    ~ .focusBorder {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      width: 0;
+      height: 3px;
+      background: #210636;
+      transition: 0.4s;
+    }
 
     &:focus {
       outline: none;
-      // box-shadow: 0 0 6px 0px #747474;
-      border-bottom: 3px solid #210636;
+
+      ~ .focusBorder {
+        width: 100%;
+      }
+
+      + .inputIcon {
+        color: #210636;
+      }
     }
   }
 
