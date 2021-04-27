@@ -1,9 +1,13 @@
 <template>
-  <main></main>
+  <main>
+    <user-select />
+  </main>
 </template>
 
 <script>
+import UserSelect from "./UserSelect.vue";
 export default {
+  components: { UserSelect },
   name: "game-body",
 };
 </script>

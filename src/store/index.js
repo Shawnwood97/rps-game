@@ -6,27 +6,43 @@ Vue.use(Vuex);
 
 export default new Vuex.Store({
   state: {
+    // Login State
     loginSuccess: cookies.get("loginStatus"),
     succMsg: undefined,
     failedLoginMessage: undefined,
     successMessage: undefined,
     username: cookies.get("userName"),
 
+    // Game State
+
+    userSelection: undefined,
+    cpuSelection: undefined,
+    winnerWinner: undefined,
+    cpuWins: 0,
+    userWins: 0,
+    gameTie: 0,
+
     options: [
       {
-        item: "rock",
+        id: 1,
+        item: "Rock",
         wins: "scissors",
         loses: "paper",
+        faIcon: "hand-rock",
       },
       {
-        item: "paper",
+        id: 2,
+        item: "Paper",
         wins: "rock",
         loses: "scissors",
+        faIcon: "hand-paper",
       },
       {
-        item: "scissors",
+        id: 3,
+        item: "Scissors",
         wins: "paper",
         loses: "rock",
+        faIcon: "hand-scissors",
       },
     ],
   },
