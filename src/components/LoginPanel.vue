@@ -67,7 +67,7 @@ export default {
 
   data() {
     return {
-      //     //  Get Cookies
+      //  Get Cookies
       loginToken: cookies.get("loginToken"),
       emailAddress: cookies.get("emailAddress"),
       userName: cookies.get("userName"),
@@ -75,7 +75,7 @@ export default {
   },
 
   computed: {
-    // Getter to change the data in the error state
+    // Getter to get the login status from the state
     loginStatus() {
       return this.$store.getters.getLoginStatus;
     },

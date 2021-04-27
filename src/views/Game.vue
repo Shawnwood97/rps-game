@@ -1,6 +1,7 @@
 <template>
   <div>
     <page-header />
+
     <game-body />
     <page-footer />
   </div>

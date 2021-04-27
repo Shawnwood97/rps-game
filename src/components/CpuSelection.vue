@@ -1,6 +1,6 @@
 <template>
   <div v-if="cpuSelection">
-    <h1>Computer Chose:</h1>
+    <h1>Computer Chose</h1>
     <fa-icon class="choices" :icon="['fas', `${cpuSelection.faIcon}`]" />
     <h4>{{ cpuSelection.item }}</h4>
   </div>
@@ -18,4 +18,9 @@ export default {
 };
 </script>
 
-<style lang="scss" scoped></style>
+<style lang="scss" scoped>
+.choices {
+  font-size: 70px;
+  margin: 10px 0;
+}
+</style>

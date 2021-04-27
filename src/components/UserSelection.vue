@@ -1,6 +1,6 @@
 <template>
   <div v-if="userSelection">
-    <h1>{{ username }} Chose:</h1>
+    <h2>{{ username }} Chose</h2>
     <fa-icon class="choices" :icon="['fas', `${userSelection.faIcon}`]" />
     <h4>{{ userSelection.item }}</h4>
   </div>
@@ -24,4 +24,9 @@ export default {
 };
 </script>
 
-<style lang="scss" scoped></style>
+<style lang="scss" scoped>
+.choices {
+  font-size: 70px;
+  margin: 10px 0;
+}
+</style>

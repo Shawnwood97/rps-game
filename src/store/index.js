@@ -18,9 +18,10 @@ export default new Vuex.Store({
     userSelection: undefined,
     cpuSelection: undefined,
     winnerWinner: undefined,
+
     cpuWins: 0,
     userWins: 0,
-    gameTie: 0,
+    gameTies: 0,
 
     options: [
       {
@@ -79,7 +80,7 @@ export default new Vuex.Store({
         (state.winnerWinner = "CPU Wins"), state.cpuWins++;
       } else {
         state.winnerWinner = "Tie";
-        state.gameTie++;
+        state.gameTies++;
       }
     },
   },
@@ -98,6 +99,20 @@ export default new Vuex.Store({
     },
 
     getWinner(state) {
+      return state.winnerWinner;
+    },
+
+    getUserScore(state) {
+      return state.userWins;
+    },
+    getCpuScore(state) {
+      return state.cpuWins;
+    },
+    getGameTies(state) {
+      return state.gameTies;
+    },
+
+    getResult(state) {
       return state.winnerWinner;
     },
   },
