@@ -59,11 +59,46 @@ export default new Vuex.Store({
     updateSuccMsg(state, data) {
       state.succMsg = data;
     },
+
+    updateUserSelection(state, data) {
+      state.userSelection = data;
+    },
+
+    updateCpuSelection(state) {
+      state.cpuSelection =
+        state.options[Math.floor(Math.random() * state.options.length)];
+    },
+
+    updateWinner(state) {
+      if (state.userSelection.wins === state.cpuSelection.item.toLowerCase()) {
+        state.winnerWinner = `${state.username} Wins`;
+        state.userWins++;
+      } else if (
+        state.userSelection.loses === state.cpuSelection.item.toLowerCase()
+      ) {
+        (state.winnerWinner = "CPU Wins"), state.cpuWins++;
+      } else {
+        state.winnerWinner = "Tie";
+        state.gameTie++;
+      }
+    },
   },
   actions: {},
   getters: {
     getLoginStatus(state) {
       return state.loginSuccess;
+    },
+
+    getCpuSelection(state) {
+      return state.cpuSelection;
+    },
+
+    getUserSelection(state) {
+      return state.userSelection;
+    },
+
+    getWinner(state) {
+      return state.winnerWinner;
     },
   },
 });

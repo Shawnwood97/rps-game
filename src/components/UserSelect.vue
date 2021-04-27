@@ -7,6 +7,7 @@
         v-for="option in this.$store.state.options"
         :key="option.id"
         class="choiceContainer"
+        @click="userSelection(option)"
       >
         <fa-icon class="choices" :icon="['fas', `${option.faIcon}`]" />
         <h4>{{ option.item }}</h4>
@@ -23,6 +24,14 @@ export default {
     return {
       username: this.$store.state.username,
     };
+  },
+
+  methods: {
+    userSelection(data) {
+      this.$store.commit("updateUserSelection", data);
+      this.$store.commit("updateCpuSelection");
+      this.$store.commit("updateWinner");
+    },
   },
 };
 </script>
