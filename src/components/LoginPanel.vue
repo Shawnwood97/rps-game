@@ -1,9 +1,9 @@
 <template>
   <section>
     <!-- Component/Element transition, transitions the first element out, the the other one in 1 frame later, pretty cool vue thing, I'm sure this is great on the router-view tag -->
-    <transition name="slide-fade" mode="out-in">
+    <transition name="fade" mode="out-in">
       <!-- if errorTitle = false (default = undefined) this element will display, considered moving into own component, conflicted -->
-      <div id="transitionContainer" v-if="!errorTitle">
+      <div id="transitionContainer" v-if="loginStatus === null">
         <h1 class="loginTitle">Login!</h1>
         <form id="loginForm" action="javascript:void(0)">
           <!-- had required on my input boxes, but removed since auth is handled by the API here -->
@@ -46,9 +46,10 @@
           Use Email: eve.holt@reqres.in and any username and password to login
         </p>
       </div>
-
-      <!-- Component that transitions in when errorTitle is true, naming convention sucks a little because this was originally going to be a modal, but I changed it -->
-      <error-slide v-if="errorTitle" />
+      <!-- Component that transitions in when loginStatus returns false, -->
+      <error-slide v-else-if="!loginStatus" />
+      <!-- Component that transitions in when loginStatus returns true -->
+      <login-succ-slide v-else-if="loginStatus" />
     </transition>
   </section>
 </template>
@@ -58,34 +59,30 @@
 import cookies from "vue-cookies";
 import axios from "axios";
 import ErrorSlide from "./ErrorSlide.vue";
+import LoginSuccSlide from "./LoginSuccSlide.vue";
 export default {
   // defining components
-  components: { ErrorSlide },
+  components: { ErrorSlide, LoginSuccSlide },
   name: "login-panel",
 
   data() {
     return {
-      //  Get Cookies
+      //     //  Get Cookies
       loginToken: cookies.get("loginToken"),
       emailAddress: cookies.get("emailAddress"),
       userName: cookies.get("userName"),
-
-      // variable for login message
-      logInResponse: "",
     };
   },
 
   computed: {
     // Getter to change the data in the error state
-    errorTitle() {
-      return this.$store.getters.getModalError;
+    loginStatus() {
+      return this.$store.getters.getLoginStatus;
     },
   },
-
   methods: {
     // Axios Post request used on click with login button
     attemptLogIn() {
-      this.logInResponse = "Logging You In...";
       axios
         .request({
           url: "https://reqres.in/api/login",
@@ -98,27 +95,33 @@ export default {
         })
         .then((res) => {
           console.log(res);
-          this.logInResponse = "Getting Login Token...";
-          this.loginToken = res.data.token;
+          // this.$store.commit("updateSuccMsg", this.logInResponse);
+          cookies.set("loginStatus", true);
+          this.$store.commit("updateStatus", true);
+
           // Set Cookies, unsure if I'll use email address for anything, but I'll store it anyways, is this BAAAAD?
-          this.logInResponse = "Setting Cookies...";
-          cookies.set("loginToken", this.loginToken);
+          // (this.loginToken = res.data.token),
+
+          cookies.set("loginToken", res.data.token);
           cookies.set(
             "emailAddress",
             document.getElementById("emailInput").value
           );
           cookies.set("userName", document.getElementById("userInput").value);
+          // had to set here and in cookie, otherwise it would not show username until refresh
+          this.$store.state.username = document.getElementById(
+            "userInput"
+          ).value;
           // reset form on success, unsure if this is proper, but it seems to work.
-          // Dont think I'll need this much longer, might still run it prior to success just for funsies.
-          document.getElementById("loginForm").reset();
-          this.logInResponse = "Redirecting To The Game...";
+          // removed reset because it is noticable prior to the animation and looks kinda odd.
+          // document.getElementById("loginForm").reset();
         })
         .catch((err) => {
           // console.log(err.response.data.error);
           // console.log(this.modalInfo);
-
-          this.$store.commit("updateModalError", err.response.data.error);
-          console.log(this.$store.state.errorTitle);
+          cookies.set("loginStatus", "");
+          this.$store.commit("updateStatus", false);
+          this.$store.commit("updateError", err.response.data.error);
         });
     },
   },
@@ -141,21 +144,16 @@ section {
   }
 }
 
-/* Enter and leave animations can use different */
-/* durations and timing functions.              */
-.slide-fade-enter-active {
-  transition: all 0.3s ease;
+.fade-enter-active {
+  transition: all 0.35s ease-in-out;
 }
-.slide-fade-leave-active {
-  transition: all 0.3s ease-in-out;
+.fade-leave-active {
+  transition: all 0.35s ease-in-out;
 }
-.slide-fade-enter
-/* .slide-fade-leave-active below version 2.1.8 */ {
-  transform: translateX(20px);
+.fade-enter {
   opacity: 0;
 }
-.slide-fade-leave-to {
-  transform: translateX(-20px);
+.fade-leave-to {
   opacity: 0;
 }
 

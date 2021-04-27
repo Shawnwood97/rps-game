@@ -1,5 +1,6 @@
 <template>
   <div id="errorGrid">
+    <h1>Login Failed!</h1>
     <fa-icon class="errorIcon" :icon="['fas', 'exclamation-circle']" />
     <h2 class="modalErrorTitle">
       {{ getErrorFromStore }}
@@ -9,18 +10,20 @@
 </template>
 
 <script>
+import cookies from "vue-cookies";
 export default {
   name: "error-slide",
 
   methods: {
     backToLogin() {
-      this.$store.state.errorTitle = undefined;
+      cookies.remove("loginStatus");
+      this.$store.state.loginSuccess = null;
     },
   },
 
   computed: {
     getErrorFromStore() {
-      return this.$store.state.errorTitle;
+      return this.$store.state.failedLoginMessage;
     },
   },
 };
