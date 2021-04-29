@@ -41,7 +41,7 @@ export default {
 
   computed: {
     getResult() {
-      return this.$store.getters.getResult;
+      return this.$store.state.winnerWinner;
     },
   },
 

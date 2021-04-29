@@ -3,16 +3,16 @@
     <div class="scoreContainer">
       <div class="userSide">
         <h3 class="user">{{ username }}</h3>
-        <h2 class="userScore">{{ userScore }}</h2>
+        <h2 class="userScore">{{ userCounter }}</h2>
       </div>
       <div class="cpuSide">
         <h3 class="cpu">CPU</h3>
-        <h2 class="cpuScore">{{ cpuScore }}</h2>
+        <h2 class="cpuScore">{{ cpuCounter }}</h2>
       </div>
 
       <div class="tieSide">
         <h3 class="cpu">Ties</h3>
-        <h2 class="tieScore">{{ gameTies }}</h2>
+        <h2 class="tieScore">{{ tieCounter }}</h2>
       </div>
     </div>
   </section>
@@ -25,21 +25,18 @@ export default {
   data() {
     return {
       username: this.$store.state.username,
-      // cpuScore: this.getUpdatedScores.cpuWins,
-      // userScore: this.$store.state.userWins,
-      // gameTies: this.$store.state.gameTies,
     };
   },
 
   computed: {
-    userScore() {
-      return this.$store.getters.getUserScore;
+    tieCounter() {
+      return this.$store.state.gameTies;
     },
-    cpuScore() {
-      return this.$store.getters.getCpuScore;
+    cpuCounter() {
+      return this.$store.state.cpuWins;
     },
-    gameTies() {
-      return this.$store.getters.getGameTies;
+    userCounter() {
+      return this.$store.state.userWins;
     },
   },
 };

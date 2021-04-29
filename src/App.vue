@@ -17,6 +17,5 @@
   text-align: center;
   color: #bdb5c4;
   background: radial-gradient(#3e2372 0%, #210636 100%);
-  // background-image: linear-gradient(135deg, #422f6e, #210636);
 }
 </style>

@@ -18,7 +18,7 @@ export default {
 
   computed: {
     userSelection() {
-      return this.$store.getters.getUserSelection;
+      return this.$store.state.userSelection;
     },
   },
 };

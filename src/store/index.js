@@ -85,35 +85,5 @@ export default new Vuex.Store({
     },
   },
   actions: {},
-  getters: {
-    getLoginStatus(state) {
-      return state.loginSuccess;
-    },
-
-    getCpuSelection(state) {
-      return state.cpuSelection;
-    },
-
-    getUserSelection(state) {
-      return state.userSelection;
-    },
-
-    getWinner(state) {
-      return state.winnerWinner;
-    },
-
-    getUserScore(state) {
-      return state.userWins;
-    },
-    getCpuScore(state) {
-      return state.cpuWins;
-    },
-    getGameTies(state) {
-      return state.gameTies;
-    },
-
-    getResult(state) {
-      return state.winnerWinner;
-    },
-  },
+  getters: {},
 });

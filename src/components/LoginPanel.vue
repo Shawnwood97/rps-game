@@ -75,9 +75,8 @@ export default {
   },
 
   computed: {
-    // Getter to get the login status from the state
     loginStatus() {
-      return this.$store.getters.getLoginStatus;
+      return this.$store.state.loginSuccess;
     },
   },
   methods: {
@@ -87,7 +86,9 @@ export default {
         .request({
           url: "https://reqres.in/api/login",
           method: "POST",
-          headers: { "Content-Type": "application/json" },
+          headers: {
+            "Content-Type": "application/json",
+          },
           data: {
             email: document.getElementById("emailInput").value,
             password: document.getElementById("passInput").value,

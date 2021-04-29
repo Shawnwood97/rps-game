@@ -12,7 +12,7 @@ export default {
 
   computed: {
     cpuSelection() {
-      return this.$store.getters.getCpuSelection;
+      return this.$store.state.cpuSelection;
     },
   },
 };
